@@ -1,5 +1,36 @@
 <template>
   <div>
+    <div class="article-actions">
+      <!-- 添加文章的入口 -->
+      <el-button
+        type="primary"
+        class="add-article-btn"
+        @click="addArticle"
+        icon="el-icon-edit"
+      >
+        添加文章</el-button
+      >
+
+      <!-- 搜索文章 -->
+      <div class="search-section">
+        <el-input
+          class="search-input"
+          placeholder="搜索文章"
+          v-model="searchQuery"
+          @keyup.enter="searchArticles"
+        >
+          <template slot="append">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              @click="searchArticles"
+              >搜索</el-button
+            >
+          </template>
+        </el-input>
+      </div>
+    </div>
+    <!-- 文章列表 -->
     <el-table :data="articles">
       <el-table-column prop="title" label="文章标题" width="140"
         ><template slot-scope="scope">
@@ -62,6 +93,12 @@ export default {
         this.articles = res.data;
       });
     },
+    addArticle() {
+      this.$router.push("/articles/create"); // 跳转到添加文章的页面
+    },
+    searchArticles() {
+      // 搜索逻辑已经在 computed 属性中处理
+    },
     read() {},
     edit(id) {
       this.$router.push(`/articles/${id}/edit`); //点击编辑则跳转到文章编辑页
@@ -82,3 +119,30 @@ export default {
   },
 };
 </script>
+
+<style>
+.article-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.add-article-btn {
+  margin-right: 10px;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 修改为居中对齐 */
+  flex-grow: 1;
+  max-width: 300px; /* 控制搜索框的最大宽度 */
+  margin-left: 20px;
+}
+
+.search-input {
+  flex-grow: 1;
+  max-width: 100%; /* 确保输入框不会超过其容器的宽度 */
+}
+</style>

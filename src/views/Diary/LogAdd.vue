@@ -26,7 +26,7 @@
       <!-- 提交按钮 -->
       <el-form-item>
         <el-button type="primary" native-type="submit">立即提交</el-button>
-        <el-button>取消</el-button>
+        <el-button @click="cancel">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -70,6 +70,10 @@ export default {
         // 跳转到文章索引页面
         this.$router.push("/logs/index");
       });
+    },
+    // 取消上传
+    cancel() {
+      this.$router.push("/logs/index");
     },
   },
 };

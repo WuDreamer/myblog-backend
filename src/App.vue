@@ -9,28 +9,29 @@
             <span slot="title">首页</span>
           </el-menu-item>
           <!-- 内容管理 -->
-          <el-submenu index="1">
+          <el-submenu index="0">
             <template slot="title"
               ><i class="el-icon-tickets"></i>内容管理</template
             >
-            <el-menu-item index="/articles/index">文章列表</el-menu-item>
-            <el-menu-item index="/articles/create">发布文章</el-menu-item>
+            <el-menu-item index="/articles/index">文章管理</el-menu-item>
+            <!-- <el-menu-item index="/resumes/index">简历内容</el-menu-item> -->
+            <el-menu-item index="/resumes/add">编辑简历</el-menu-item>
           </el-submenu>
-          <!-- 用户管理 -->
+          <!-- 网站管理 -->
+          <el-submenu index="1">
+            <template slot="title"
+              ><i class="el-icon-set-up"></i>网站管理</template
+            >
+            <el-menu-item index="/logs/index">日志历程</el-menu-item>
+            <el-menu-item index="/friends/index">友情链接</el-menu-item>
+            <el-menu-item index="/friends/add">网站配置</el-menu-item>
+          </el-submenu>
+          <!-- 系统管理 -->
           <el-submenu index="2">
             <template slot="title"
-              ><i class="el-icon-user"></i>用户管理</template
+              ><i class="el-icon-setting"></i>系统管理</template
             >
-            <el-menu-item index="/users/index">用户列表</el-menu-item>
-            <el-menu-item index="/users/add">新增用户</el-menu-item>
-          </el-submenu>
-          <!-- 用户管理 -->
-          <el-submenu index="3">
-            <template slot="title"
-              ><i class="el-icon-set-up"></i>日志管理</template
-            >
-            <el-menu-item index="/logs/index">日志列表</el-menu-item>
-            <el-menu-item index="/logs/add">新增日志</el-menu-item>
+            <el-menu-item index="/users/index">用户管理</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>

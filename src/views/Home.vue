@@ -36,14 +36,14 @@
               <!-- 网站创造者介绍 -->
               <el-card class="box-card">
                 <div slot="header" class="clearfix">
-                  <span>网站创造者</span>
+                  <span>网站制作者</span>
                 </div>
                 <div class="creator-content">
                   <div class="avatar">
-                    <img src="@/assets/pic4.jpg" alt="Creator" />
+                    <img src="@/assets/pic.jpg" alt="Creator" />
                   </div>
                   <div class="details">
-                    <h3>张三</h3>
+                    <h3>Wu.</h3>
                     <p>前端开发者，热爱编程和设计。</p>
                     <p>联系方式: zhangsan@example.com</p>
                   </div>
@@ -75,9 +75,10 @@ export default {
   data() {
     return {
       carouselItems: [
-        require("@/assets/pic2.jpg"),
-        require("@/assets/pic3.jpg"),
-        require("@/assets/pic4.jpg"),
+        require("@/assets/blog.png"),
+        require("@/assets/blog1.png"),
+        require("@/assets/blog2.png"),
+        require("@/assets/blog3.png"),
       ],
       icons: {
         文章数量: "el-icon-document",

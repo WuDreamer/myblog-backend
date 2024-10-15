@@ -69,6 +69,99 @@ const Log = mongoose.model('Log', new mongoose.Schema({
     } // 默认值为当前时间
 }))
 
+// 创建简历表
+const Resume = mongoose.model('Resume', new mongoose.Schema({
+    name: {
+        type: String
+    },
+    contact: {
+        type: String
+    },
+    email: {
+        type: String
+    },
+    github: {
+        type: String
+    },
+    school: {
+        type: String
+    },
+    major: {
+        type: String
+    },
+    entryYear: {
+        type: String
+    },
+    graduationYear: {
+        type: String
+    },
+    certificates: {
+        type: String
+    },
+    skills: {
+        type: String
+    },
+    project_name: {
+        type: String
+    },
+    project_site: {
+        type: String
+    },
+    project_job: {
+        type: String
+    },
+    project_time: {
+        type: String
+    },
+    project_skills: {
+        type: String
+    },
+    project_content: {
+        type: String
+    },
+    firm_name: {
+        type: String
+    },
+    firm_address: {
+        type: String
+    },
+    firm_content: {
+        type: String
+    },
+    firm_time: {
+        type: String
+    },
+    firm_job: {
+        type: String
+    },
+    statement: {
+        type: String
+    }
+}))
+
+// 创建友链表
+const Friend = mongoose.model('Friend', new mongoose.Schema({
+    site_ico: {
+        type: String
+    },
+    site_name: {
+        type: String
+    },
+    site_content: {
+        type: String
+    },
+    site_address: {
+        type: String
+    },
+    site_state: {
+        type: String
+    },
+    time: {
+        type: Date,
+        default: Date.now
+    } // 默认值为当前时间
+}))
+
 
 app.get('/', async (req, res) => {
     res.send('index')
@@ -166,6 +259,7 @@ app.get('/api/users/:id', async (req, res) => {
 
 
 
+
 /*  日志管理的接口  */
 // 日志文章
 app.post('/api/logs', async (req, res) => {
@@ -211,6 +305,84 @@ app.put('/api/logs/:id', async (req, res) => {
 })
 
 
+
+// 简历详情  
+app.get('/api/resumes/:id', async (req, res) => {
+    const resume = await Resume.findById(req.params.id)
+    if (resume) {
+        res.send(resume);
+    } else {
+        res.status(404).send({
+            error: '简历没有创建'
+        });
+    }
+})
+// 简历添加
+app.post('/api/resumes', async (req, res) => {
+    const resume = await Resume.create(req.body); // 创建用户 
+    res.send(resume);
+});
+// 修改简历
+app.put('/api/resumes/:id', async (req, res) => {
+    const resume = await Resume.findByIdAndUpdate(req.params.id, req.body) // 修改用户
+    res.send(resume) //返回给前端
+})
+// 简历列表
+app.get('/api/resumes', async (req, res) => {
+    const resumes = await Resume.find() // 查询数据
+    res.send(resumes); //// 返回格式化后的文章列表  
+})
+// 删除简历
+app.delete('/api/resumes/:id', async (req, res) => {
+    await Resume.findByIdAndDelete(req.params.id) // 删除数据
+    res.send({
+        status: true
+    }) //返回true给前端
+})
+
+/*  友链管理的接口  */
+// 新增友链
+app.post('/api/friends', async (req, res) => {
+    req.body.time = new Date(); // 设置新增当前时间  
+    const friend = await Friend.create(req.body); // 创建友链
+    friend.time = moment(friend.time).format('YYYY年MM月DD日 HH:mm:ss'); // 格式化时间  
+    res.send(friend);
+});
+// 友链列表
+app.get('/api/friends', async (req, res) => {
+    const friends = await Friend.find() // 查询数据
+    const formattedFriends = friends.map(friend => {
+        return {
+            ...friend._doc, // // 展开文章的所有字段 
+            time: moment(friend.time).format('YYYY年MM月DD日 HH:mm:ss') // 格式化时间  
+        };
+    });
+    res.send(formattedFriends); //// 返回格式化后的文章列表  
+})
+// 删除友链
+app.delete('/api/friends/:id', async (req, res) => {
+    await Friend.findByIdAndDelete(req.params.id) // 删除数据
+    res.send({
+        status: true
+    }) //返回true给前端
+})
+// 友链详情
+app.get('/api/friends/:id', async (req, res) => {
+    const friend = await Friend.findById(req.params.id) // 查看文章详细内容
+    if (friend) {
+        friend.time = moment(friend.time).format('YYYY年MM月DD日 HH:mm:ss'); // 格式化时间  
+        res.send(friend);
+    } else {
+        res.status(404).send({
+            error: '文章没有创建'
+        });
+    }
+})
+// 修改友链
+app.put('/api/friends/:id', async (req, res) => {
+    const friend = await Friend.findByIdAndUpdate(req.params.id, req.body) // 修改文章
+    res.send(friend) //返回给前端
+})
 
 
 

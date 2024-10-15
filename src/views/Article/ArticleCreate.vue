@@ -20,7 +20,6 @@
         <quill-editor
           ref="myQuillEditor"
           v-model="article.body"
-          :options="editorOption"
           @blur="onEditorBlur($event)"
           @focus="onEditorFocus($event)"
           @ready="onEditorReady($event)"

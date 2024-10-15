@@ -10,7 +10,12 @@ import UserEdit from '../views/User/UserEdit.vue'
 import LogAdd from '../views/Diary/LogAdd.vue'
 import LogEdit from '../views/Diary/LogEdit.vue'
 import LogList from '../views/Diary/LogList.vue'
-
+import ResumeList from '../views/Resume/ResumeList.vue'
+import ResumeEdit from '../views/Resume/ResumeEdit.vue'
+import ResumeAdd from '../views/Resume/ResumeAdd.vue'
+import FriendAdd from '../views/FriendLink/FriendLinkAdd.vue'
+import FriendEdit from '../views/FriendLink/FriendLinkEdit.vue'
+import FriendList from '../views/FriendLink/FriendLinkList.vue'
 
 Vue.use(VueRouter)
 
@@ -71,6 +76,38 @@ const routes = [{
     path: '/logs/:id/edit',
     name: 'logs-edit',
     component: LogEdit
+  },
+  // 简历管理路由模块
+  {
+    path: '/resumes/index',
+    name: 'resume-index',
+    component: ResumeList
+  },
+  {
+    path: '/resumes/:id/edit',
+    name: 'resume-edit',
+    component: ResumeEdit
+  },
+  {
+    path: '/resumes/add',
+    name: 'resume-add',
+    component: ResumeAdd
+  },
+  // 友链管理路由模块
+  {
+    path: '/friends/index',
+    name: 'friend-index',
+    component: FriendList
+  },
+  {
+    path: '/friends/:id/edit',
+    name: 'friend-edit',
+    component: FriendEdit
+  },
+  {
+    path: '/friends/add',
+    name: 'friend-add',
+    component: FriendAdd
   },
 ]
 
