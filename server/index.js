@@ -1,166 +1,23 @@
 const express = require('express')
 const cors = require('cors')
 const moment = require('moment');
-const app = express()
 
+
+const {
+    Article,
+    User,
+    Log,
+    Resume,
+    Friend,
+    Website,
+    WordDay
+} = require('./db') // 引入db.js中的数据表
+const app = express()
 // 配置允许跨域
 app.use(cors())
 // 让客户端识别json数据
 app.use(express.json())
 
-// 配置数据库
-const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/blog_element');
-
-// 创建文章表
-const Article = mongoose.model('Article', new mongoose.Schema({
-    title: {
-        type: String
-    },
-    list: {
-        type: String
-    },
-    body: {
-        type: String
-    },
-    time: {
-        type: Date,
-        default: Date.now
-    } // 默认值为当前时间
-}))
-
-// 创建用户表
-const User = mongoose.model('User', new mongoose.Schema({
-    nickname: {
-        type: String
-    },
-    image: {
-        type: String
-    },
-    email: {
-        type: String
-    },
-    list: {
-        type: String
-    },
-    introduce: {
-        type: String
-    },
-    time: {
-        type: Date,
-        default: Date.now
-    } // 默认值为当前时间
-}))
-
-// 创建日志表
-const Log = mongoose.model('Log', new mongoose.Schema({
-    title: {
-        type: String
-    },
-    description: {
-        type: String
-    },
-    list: {
-        type: String
-    },
-    time: {
-        type: Date,
-        default: Date.now
-    } // 默认值为当前时间
-}))
-
-// 创建简历表
-const Resume = mongoose.model('Resume', new mongoose.Schema({
-    name: {
-        type: String
-    },
-    contact: {
-        type: String
-    },
-    email: {
-        type: String
-    },
-    github: {
-        type: String
-    },
-    school: {
-        type: String
-    },
-    major: {
-        type: String
-    },
-    entryYear: {
-        type: String
-    },
-    graduationYear: {
-        type: String
-    },
-    certificates: {
-        type: String
-    },
-    skills: {
-        type: String
-    },
-    project_name: {
-        type: String
-    },
-    project_site: {
-        type: String
-    },
-    project_job: {
-        type: String
-    },
-    project_time: {
-        type: String
-    },
-    project_skills: {
-        type: String
-    },
-    project_content: {
-        type: String
-    },
-    firm_name: {
-        type: String
-    },
-    firm_address: {
-        type: String
-    },
-    firm_content: {
-        type: String
-    },
-    firm_time: {
-        type: String
-    },
-    firm_job: {
-        type: String
-    },
-    statement: {
-        type: String
-    }
-}))
-
-// 创建友链表
-const Friend = mongoose.model('Friend', new mongoose.Schema({
-    site_ico: {
-        type: String
-    },
-    site_name: {
-        type: String
-    },
-    site_content: {
-        type: String
-    },
-    site_address: {
-        type: String
-    },
-    site_state: {
-        type: String
-    },
-    time: {
-        type: Date,
-        default: Date.now
-    } // 默认值为当前时间
-}))
 
 
 app.get('/', async (req, res) => {
@@ -258,10 +115,8 @@ app.get('/api/users/:id', async (req, res) => {
 
 
 
-
-
 /*  日志管理的接口  */
-// 日志文章
+// 日志添加
 app.post('/api/logs', async (req, res) => {
     req.body.time = new Date(); // 设置当前时间  
     const log = await Log.create(req.body); // 创建日志
@@ -340,6 +195,7 @@ app.delete('/api/resumes/:id', async (req, res) => {
     }) //返回true给前端
 })
 
+
 /*  友链管理的接口  */
 // 新增友链
 app.post('/api/friends', async (req, res) => {
@@ -386,7 +242,100 @@ app.put('/api/friends/:id', async (req, res) => {
 
 
 
+/*  网站管理的接口  */
+// 新增网站
+app.post('/api/links', async (req, res) => {
+    req.body.time = new Date(); // 设置新增当前时间  
+    const link = await Website.create(req.body); // 创建网站
+    link.time = moment(link.time).format('YYYY年MM月DD日 HH:mm:ss'); // 格式化时间  
+    res.send(link);
+});
+// 网站列表
+app.get('/api/links', async (req, res) => {
+    const links = await Website.find() // 查询数据
+    const formattedLinks = links.map(link => {
+        return {
+            ...link._doc, // // 展开网站的所有字段 
+            time: moment(link.time).format('YYYY年MM月DD日 HH:mm:ss') // 格式化时间  
+        };
+    });
+    res.send(formattedLinks); //// 返回格式化后的文章列表  
+})
+// 删除网站
+app.delete('/api/links/:id', async (req, res) => {
+    await Website.findByIdAndDelete(req.params.id) // 删除数据
+    res.send({
+        status: true
+    }) //返回true给前端
+})
+// 网站详情
+app.get('/api/links/:id', async (req, res) => {
+    const link = await Website.findById(req.params.id) // 查看网站详细内容
+    if (link) {
+        link.time = moment(link.time).format('YYYY年MM月DD日 HH:mm:ss'); // 格式化时间  
+        res.send(link);
+    } else {
+        res.status(404).send({
+            error: '文章没有创建'
+        });
+    }
+})
+// 修改网站
+app.put('/api/links/:id', async (req, res) => {
+    const link = await Website.findByIdAndUpdate(req.params.id, req.body) // 修改网站
+    res.send(link) //返回给前端
+})
 
+
+/*  每日一句的接口  */
+// 句子添加
+app.post('/api/words', async (req, res) => {
+    req.body.time = new Date(); // 设置当前时间  
+    const word = await WordDay.create(req.body); // 创建句子
+    word.time = moment(word.time).format('YYYY年MM月DD日 HH:mm:ss'); // 格式化时间  
+    res.send(word);
+});
+// 句子列表
+app.get('/api/words', async (req, res) => {
+    const words = await WordDay.find() // 查询数据
+    const formattedWords = words.map(word => {
+        return {
+            ...word._doc, // // 展开句子的所有字段 
+            time: moment(word.time).format('YYYY年MM月DD日 HH:mm:ss') // 格式化时间  
+        };
+    });
+    res.send(formattedWords); //// 返回格式化后的句子列表  
+})
+// 删除句子
+app.delete('/api/words/:id', async (req, res) => {
+    await WordDay.findByIdAndDelete(req.params.id) // 删除数据
+    res.send({
+        status: true
+    }) //返回true给前端
+})
+// 句子详情
+app.get('/api/words/:id', async (req, res) => {
+    const word = await WordDay.findById(req.params.id) // 查看句子内容
+    if (word) {
+        word.time = moment(word.time).format('YYYY年MM月DD日 HH:mm:ss'); // 格式化时间  
+        res.send(word);
+    } else {
+        res.status(404).send({
+            error: '文章没有创建'
+        });
+    }
+})
+// 修改句子
+app.put('/api/words/:id', async (req, res) => {
+    const word = await WordDay.findByIdAndUpdate(req.params.id, req.body) // 修改句子
+    res.send(word) //返回给前端
+})
+
+
+
+
+
+// 设置服务器监听端口
 app.listen(3001, () => {
     console.log('http://localhost:/3001/')
 })

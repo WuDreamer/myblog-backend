@@ -16,14 +16,16 @@
             <el-menu-item index="/articles/index">文章管理</el-menu-item>
             <!-- <el-menu-item index="/resumes/index">简历内容</el-menu-item> -->
             <el-menu-item index="/resumes/add">编辑简历</el-menu-item>
+            <el-menu-item index="/words/index">每日一句</el-menu-item>
           </el-submenu>
           <!-- 网站管理 -->
           <el-submenu index="1">
             <template slot="title"
-              ><i class="el-icon-set-up"></i>网站管理</template
+              ><i class="el-icon-guide"></i>网站管理</template
             >
             <el-menu-item index="/logs/index">日志历程</el-menu-item>
             <el-menu-item index="/friends/index">友情链接</el-menu-item>
+            <el-menu-item index="/links/index">学习网站</el-menu-item>
             <el-menu-item index="/friends/add">网站配置</el-menu-item>
           </el-submenu>
           <!-- 系统管理 -->
@@ -37,6 +39,7 @@
       </el-aside>
 
       <el-container>
+        <!-- 页面头部 -->
         <el-header style="text-align: right; font-size: 12px">
           <span v-for="user in users" :key="user._id">{{ user.nickname }}</span>
           <el-dropdown>

@@ -1,29 +1,26 @@
 <template>
   <div>
     <div class="friend-actions">
-      <!-- 添加友链的入口 -->
+      <!-- 添加网站的入口 -->
       <el-button
         type="primary"
-        class="add-friend-btn"
-        @click="addFriend"
+        class="add-link-btn"
+        @click="addLink"
         icon="el-icon-edit"
       >
-        添加友链</el-button
+        添加网站</el-button
       >
 
-      <!-- 搜索友链 -->
+      <!-- 搜索网站 -->
       <div class="search-section">
         <el-input
           class="search-input"
-          placeholder="搜索友链"
+          placeholder="搜索网站"
           v-model="searchQuery"
-          @keyup.enter="searchFriends"
+          @keyup.enter="searchLinks"
         >
           <template slot="append">
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              @click="searchFriends"
+            <el-button type="primary" icon="el-icon-search" @click="searchLinks"
               >搜索</el-button
             >
           </template>
@@ -31,49 +28,56 @@
       </div>
     </div>
     <!-- 友链表单部分 -->
-    <el-table :data="friends">
-      <el-table-column prop="site_ico" label="友链图标" width="140"
+    <el-table :data="links">
+      <el-table-column prop="ico" label="网站图标" width="140"
         ><template slot-scope="scope">
           <div class="ellipsis" style="width: 100px">
-            {{ scope.row.site_ico }}
+            {{ scope.row.ico }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="site_name" label="友链名称" width="150">
+      <el-table-column prop="name" label="网站名称" width="150">
         <template slot-scope="scope">
-          <div class="ellipsis" style="width: 100px">
-            {{ scope.row.site_name }}
+          <div class="ellipsis" style="width: 50px">
+            {{ scope.row.name }}
           </div>
         </template></el-table-column
       >
-      <el-table-column prop="site_content" label="友链描述" width="140"
+      <el-table-column prop="content" label="网站描述" width="140"
         ><template slot-scope="scope">
           <div class="ellipsis" style="width: 100px">
-            {{ scope.row.site_content }}
+            {{ scope.row.content }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="site_address" label="友链地址" width="140"
+      <el-table-column prop="site" label="网站地址" width="140"
         ><template slot-scope="scope">
-          <div class="ellipsis" style="width: 100px">
-            {{ scope.row.site_address }}
+          <div style="width: 100px">
+            {{ scope.row.site }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="site_state" label="友链状态" width="140"
+      <el-table-column prop="type" label="类型" width="140"
         ><template slot-scope="scope">
-          <div class="ellipsis" style="width: 100px">
-            {{ scope.row.site_state }}
+          <div>
+            {{ scope.row.type }}
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="time" label="时间" width="140"
+      <el-table-column prop="state" label="状态" width="140"
+        ><template slot-scope="scope">
+          <div style="width: 50px">
+            {{ scope.row.state }}
+          </div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column prop="time" label="时间" width="140"
         ><template slot-scope="scope">
           <div class="ellipsis" style="width: 150px">
             {{ scope.row.time }}
           </div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
           <el-button @click="edit(scope.row._id)" type="text" size="small"
@@ -92,26 +96,26 @@
 export default {
   data() {
     return {
-      friends: [],
+      links: [],
     };
   },
   methods: {
     fetch() {
-      this.$http.get("friends").then((res) => {
-        this.friends = res.data;
+      this.$http.get("links").then((res) => {
+        this.links = res.data;
       });
     },
-    addFriend() {
-      this.$router.push("/friends/add"); // 跳转到添加友链的页面
+    addLink() {
+      this.$router.push("/links/add"); // 跳转到添加友链的页面
     },
-    searchFriends() {
+    searchLinks() {
       // 搜索逻辑已经在 computed 属性中处理
     },
     edit(id) {
-      this.$router.push(`/friends/${id}/edit`); //点击编辑则跳转到文章编辑页
+      this.$router.push(`/links/${id}/edit`); //点击编辑则跳转到文章编辑页
     },
     remove(id) {
-      this.$http.delete(`friends/${id}`).then(() => {
+      this.$http.delete(`links/${id}`).then(() => {
         this.$message({
           message: "文章删除成功",
           type: "success",
