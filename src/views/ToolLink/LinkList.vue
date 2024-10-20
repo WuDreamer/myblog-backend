@@ -29,11 +29,9 @@
     </div>
     <!-- 友链表单部分 -->
     <el-table :data="links">
-      <el-table-column prop="ico" label="网站图标" width="140"
-        ><template slot-scope="scope">
-          <div class="ellipsis" style="width: 100px">
-            {{ scope.row.ico }}
-          </div>
+      <el-table-column prop="ico" label="网站图标" width="140">
+        <template slot-scope="scope">
+          <img class="image" :src="scope.row.ico" style="height: 3rem" />
         </template>
       </el-table-column>
       <el-table-column prop="name" label="网站名称" width="150">
@@ -132,6 +130,13 @@ export default {
 </script>
 
 <style>
+.image {
+  border-radius: 50%; /* 使头像变为圆形 */
+  width: 3rem; /* 设置头像的宽度 */
+  height: 3rem; /* 设置头像的高度 */
+  object-fit: cover; /* 确保图片内容适应头像框 */
+}
+
 .friend-actions {
   display: flex;
   align-items: center;

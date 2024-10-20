@@ -35,9 +35,20 @@
           <el-option label="普通用户" value="public"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="头像">
+        <el-upload
+          class="avatar-uploader"
+          :action="`http://localhost:3001/api` + '/upload'"
+          :show-file-list="false"
+          :on-success="afterUpload"
+        >
+          <img v-if="user.image" :src="user.image" class="avatar" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" native-type="submit">立即提交</el-button>
-        <el-button>取消</el-button>
+        <el-button @click="cancel">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -47,24 +58,24 @@
 export default {
   data() {
     return {
-      user: {
-        image: "",
-        nickname: "",
-        email: "",
-        list: "",
-        introduce: "",
-      },
+      user: {},
     };
   },
   methods: {
+    afterUpload(res) {
+      // this.user赋值主体    'image'赋值的属性
+      this.$set(this.user, "image", res.url);
+    },
     saveUser() {
+      // 定义分类映射关系
       const categoryMapping = {
         manage: "管理员",
         public: "普通用户",
       };
 
+      // 将 article.list 替换成对应的中文名称
       const selectedCategory = this.user.list;
-      this.user.list = categoryMapping[selectedCategory] || selectedCategory;
+      this.user.list = categoryMapping[selectedCategory] || selectedCategory; // 进行映射，如果没有匹配则保留原值
 
       this.$http.post("users", this.user).then(() => {
         this.$message({
@@ -75,6 +86,39 @@ export default {
         this.$router.push("/users/index");
       });
     },
+    // 取消上传
+    cancel() {
+      this.$router.push("/users/index");
+    },
   },
 };
 </script>
+
+<style>
+.avatar-uploader .el-upload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  height: 100px; /* 确保有足够的高度 */
+  width: 100px; /* 确保有足够的宽度 */
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+</style>

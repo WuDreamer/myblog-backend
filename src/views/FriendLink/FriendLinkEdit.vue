@@ -6,9 +6,6 @@
       :model="friend"
       label-width="120px"
     >
-      <el-form-item label="网站图标">
-        <el-input v-model="friend.site_ico"></el-input>
-      </el-form-item>
       <el-form-item label="网站名称">
         <el-input v-model="friend.site_name"></el-input>
       </el-form-item>
@@ -24,7 +21,18 @@
           <el-option label="异常" value="error"></el-option>
         </el-select>
       </el-form-item>
-
+      <!-- 图片上传 -->
+      <el-form-item label="网站图标">
+        <el-upload
+          class="avatar-uploader"
+          :action="`http://localhost:3001/api` + '/upload'"
+          :show-file-list="false"
+          :on-success="afterUpload"
+        >
+          <img v-if="friend.site_ico" :src="friend.site_ico" class="avatar" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </el-form-item>
       <!-- 提交按钮 -->
       <el-form-item>
         <el-button type="primary" native-type="submit">立即提交</el-button>
@@ -43,6 +51,11 @@ export default {
     };
   },
   methods: {
+    // 图片url赋值给friend的site_ico
+    afterUpload(res) {
+      // this.user赋值主体    'image'赋值的属性
+      this.$set(this.friend, "site_ico", res.url);
+    },
     saveFriend() {
       // 定义分类映射关系
       const categoryMapping = {

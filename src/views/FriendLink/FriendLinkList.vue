@@ -34,9 +34,7 @@
     <el-table :data="friends">
       <el-table-column prop="site_ico" label="友链图标" width="140"
         ><template slot-scope="scope">
-          <div class="ellipsis" style="width: 100px">
-            {{ scope.row.site_ico }}
-          </div>
+          <img class="image" :src="scope.row.site_ico" style="height: 3rem" />
         </template>
       </el-table-column>
       <el-table-column prop="site_name" label="友链名称" width="150">
@@ -128,6 +126,13 @@ export default {
 </script>
 
 <style>
+.image {
+  border-radius: 50%; /* 使头像变为圆形 */
+  width: 3rem; /* 设置头像的宽度 */
+  height: 3rem; /* 设置头像的高度 */
+  object-fit: cover; /* 确保图片内容适应头像框 */
+}
+
 .friend-actions {
   display: flex;
   align-items: center;

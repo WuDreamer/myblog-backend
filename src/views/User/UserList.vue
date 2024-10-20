@@ -29,13 +29,22 @@
     </div>
     <!-- 用户表单 -->
     <el-table :data="users">
-      <!-- <el-table-column prop="image" label="头像" width="140"> </el-table-column> -->
+      <el-table-column prop="image" label="头像" width="140">
+        <template slot-scope="scope">
+          <img class="image" :src="scope.row.image" style="height: 3rem" />
+        </template>
+      </el-table-column>
       <el-table-column prop="nickname" label="昵称"> </el-table-column>
-      <el-table-column prop="introduce" label="简介" width="220">
+      <el-table-column prop="introduce" label="简介" width="100">
       </el-table-column>
       <el-table-column prop="list" label="权限等级"> </el-table-column>
       <el-table-column prop="email" label="邮箱" width="200"> </el-table-column>
-      <el-table-column prop="time" label="创建时间" width="220">
+      <el-table-column
+        class="ellipsis"
+        prop="time"
+        label="创建时间"
+        width="220"
+      >
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
@@ -91,6 +100,13 @@ export default {
 </script>
 
 <style>
+.image {
+  border-radius: 50%; /* 使头像变为圆形 */
+  width: 3rem; /* 设置头像的宽度 */
+  height: 3rem; /* 设置头像的高度 */
+  object-fit: cover; /* 确保图片内容适应头像框 */
+}
+
 .user-actions {
   display: flex;
   align-items: center;
@@ -114,5 +130,12 @@ export default {
 .search-input {
   flex-grow: 1;
   max-width: 100%; /* 确保输入框不会超过其容器的宽度 */
+}
+
+/* 超出一行范围使用省略号 */
+.ellipsis {
+  white-space: nowrap; /* 不换行 */
+  overflow: hidden; /* 超出部分隐藏 */
+  text-overflow: ellipsis; /* 省略号 */
 }
 </style>

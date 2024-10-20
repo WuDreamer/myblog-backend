@@ -10,19 +10,24 @@ const {
     Resume,
     Friend,
     Website,
-    WordDay
+    WordDay,
 } = require('./db') // 引入db.js中的数据表
 const app = express()
 // 配置允许跨域
 app.use(cors())
 // 让客户端识别json数据
 app.use(express.json())
+// 实现将上传的静态文件能够在前端显示
+app.use('/uploads', express.static(__dirname + '/uploads'))
+
 
 
 
 app.get('/', async (req, res) => {
     res.send('index')
 })
+
+
 
 /*  文章管理的接口  */
 // 新增文章
@@ -69,6 +74,19 @@ app.put('/api/articles/:id', async (req, res) => {
 })
 
 
+const multer = require('multer');
+const upload = multer({
+    dest: __dirname + '/uploads'
+}) //上传中间件
+const path = require('path');
+app.post('/api/upload', upload.single('file'), async (req, res) => {
+    const file = req.file;
+    file.url = `http://localhost:3001/uploads/${file.filename}`
+    res.send(file)
+})
+
+
+
 /*  用户管理的接口  */
 // 用户列表
 app.get('/api/users', async (req, res) => {
@@ -83,9 +101,11 @@ app.get('/api/users', async (req, res) => {
 })
 // 添加用户
 app.post('/api/users', async (req, res) => {
-    req.body.time = new Date(); // 设置当前时间  
-    const user = await User.create(req.body); // 创建用户
-    user.time = moment(user.time).format('YYYY年MM月DD日 HH:mm:ss'); // 格式化时间  
+
+    // 创建用户
+    const user = await User.create(req.body);
+    // 格式化时间
+    user.time = moment(user.time).format('YYYY年MM月DD日 HH:mm:ss');
     res.send(user);
 });
 // 删除用户
