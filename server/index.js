@@ -11,6 +11,7 @@ const {
     Friend,
     Website,
     WordDay,
+    AdminUser
 } = require('./db') // 引入db.js中的数据表
 const app = express()
 // 配置允许跨域
@@ -80,9 +81,47 @@ const upload = multer({
 }) //上传中间件
 const path = require('path');
 app.post('/api/upload', upload.single('file'), async (req, res) => {
-    const file = req.file;
+    const file = req.file.fieldname;
     file.url = `http://localhost:3001/uploads/${file.filename}`
     res.send(file)
+})
+
+
+/*  管理员管理的接口  */
+// 用户列表
+app.get('/api/admin_users', async (req, res) => {
+    const admin_users = await AdminUser.find() // 查询用户数据
+    res.send(admin_users); //// 返回格式化后的文章列表
+})
+// 添加用户
+app.post('/api/admin_users', async (req, res) => {
+
+    // 创建用户
+    const admin_user = await AdminUser.create(req.body);
+    res.send(admin_user);
+});
+// 删除用户
+app.delete('/api/admin_users/:id', async (req, res) => {
+    await AdminUser.findByIdAndDelete(req.params.id) // 删除数据
+    res.send({
+        status: true
+    }) //返回true给前端
+})
+// 修改用户
+app.put('/api/admin_users/:id', async (req, res) => {
+    const admin_user = await AdminUser.findByIdAndUpdate(req.params.id, req.body) // 修改用户
+    res.send(admin_user) //返回给前端
+})
+// 用户详情
+app.get('/api/admin_users/:id', async (req, res) => {
+    const admin_user = await AdminUser.findById(req.params.id) // 查看文章详细内容
+    if (admin_user) {
+        res.send(admin_user);
+    } else {
+        res.status(404).send({
+            error: '用户没有创建'
+        });
+    }
 })
 
 

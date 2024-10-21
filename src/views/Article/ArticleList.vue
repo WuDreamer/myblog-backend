@@ -37,7 +37,7 @@
           <div class="ellipsis" style="width: 100px">{{ scope.row.title }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="body" label="内容" width="200">
+      <el-table-column class="ellipsis" prop="body" label="内容" width="200">
         <template slot-scope="scope">
           <div
             style="width: 150px"
@@ -144,5 +144,12 @@ export default {
 .search-input {
   flex-grow: 1;
   max-width: 100%; /* 确保输入框不会超过其容器的宽度 */
+}
+
+/* 超出一行范围使用省略号 */
+.ellipsis {
+  white-space: nowrap; /* 不换行 */
+  overflow: hidden; /* 超出部分隐藏 */
+  text-overflow: ellipsis; /* 省略号 */
 }
 </style>

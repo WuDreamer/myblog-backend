@@ -2,9 +2,14 @@
   <div id="app">
     <el-container style="height: 100vh; border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-        <el-menu router :default-openeds="['0', '1', '2', '3']">
+        <el-menu
+          router
+          :default-openeds="['0', '1', '2']"
+          unique-opened
+          :default-active="$route.path"
+        >
           <!-- 首页 -->
-          <el-menu-item index="/index">
+          <el-menu-item index="/">
             <i class="el-icon-s-home"></i>
             <span slot="title">首页</span>
           </el-menu-item>
@@ -34,6 +39,7 @@
               ><i class="el-icon-setting"></i>系统管理</template
             >
             <el-menu-item index="/users/index">用户管理</el-menu-item>
+            <el-menu-item index="/admin_users/index">管理员用户</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>

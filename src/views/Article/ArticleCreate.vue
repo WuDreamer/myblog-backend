@@ -17,47 +17,42 @@
       </el-form-item>
       <el-form-item label="文章内容">
         <!-- 富文本 -->
-        <quill-editor
-          ref="myQuillEditor"
+        <vue-editor
           v-model="article.body"
-          @blur="onEditorBlur($event)"
-          @focus="onEditorFocus($event)"
-          @ready="onEditorReady($event)"
-          @change="onEditorChange($event)"
-          style="height: 100px"
+          useCustomImageHandler
+          @image-added="handleImageAdded"
         />
       </el-form-item>
-      <!-- 上传图片 -->
 
       <!-- 提交按钮 -->
       <el-form-item style="padding-top: 100px">
         <el-button type="primary" native-type="submit">立即提交</el-button>
-        <el-button>取消</el-button>
+        <el-button @click="cancel">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-import { quillEditor } from "vue-quill-editor";
+import { VueEditor } from "vue2-editor";
 
 export default {
-  components: { quillEditor },
+  components: { VueEditor },
   data() {
     return {
       // 文章
-      article: {
-        title: "",
-        body: "",
-        list: "",
-      },
+      article: {},
     };
   },
   methods: {
-    // 图片
+    // 富文本编辑
+    async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await this.$http.post("/upload", formData);
+      Editor.insertEmbed(cursorLocation, "image", res.data.url);
+      resetUploader();
+    },
 
     // 上传文章
     saveArticle() {
@@ -82,6 +77,10 @@ export default {
         // 跳转到文章索引页面
         this.$router.push("/articles/index");
       });
+    },
+    // 取消上传
+    cancel() {
+      this.$router.push("/articles/index");
     },
 
     // 失去焦点事件

@@ -24,20 +24,42 @@ import LinkList from '../views/ToolLink/LinkList.vue'
 import WordAdd from '../views/Sentence/WordsAdd.vue'
 import WordEdit from '../views/Sentence/WordsEdit.vue'
 import WordList from '../views/Sentence/WordsList.vue'
-
+import AdminUserList from '../views/Admin/AdminUserList.vue'
+import AdminUserAdd from '../views/Admin/AdminUserAdd.vue'
+import AdminUserEdit from '../views/Admin/AdminUserEdit.vue'
 
 Vue.use(VueRouter)
 
 const routes = [{
-    path: '/',
+    path: '/login',
     name: 'login',
-    redirect: '/index'
+    component: LoginPage
   },
+  // 首页
   {
-    path: '/index',
+    path: '/',
     name: 'home',
     component: HomePage
   },
+
+  // 管理员路由模块
+  {
+    path: '/admin_users/add',
+    name: 'admin_users-add',
+    component: AdminUserAdd
+  },
+  {
+    path: '/admin_users/index',
+    name: 'admin_users-index',
+    component: AdminUserList
+  },
+  {
+    path: '/admin_users/:id/edit',
+    name: 'admin_users-edit',
+    component: AdminUserEdit
+  },
+
+
   // 内容管理路由模块
   {
     path: '/articles/create',

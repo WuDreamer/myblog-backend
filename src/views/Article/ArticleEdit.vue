@@ -17,7 +17,12 @@
       </el-form-item>
 
       <el-form-item label="文章内容">
-        <quill-editor v-model="article.body" ref="myQuillEditor" />
+        <!-- 富文本 -->
+        <vue-editor
+          v-model="article.body"
+          useCustomImageHandler
+          @image-added="handleImageAdded"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" native-type="submit">修改成功</el-button>
@@ -28,11 +33,11 @@
 </template>
 
 <script>
-import { quillEditor } from "vue-quill-editor"; // 引入富文本编辑器组件
+import { VueEditor } from "vue2-editor";
 
 export default {
   components: {
-    quillEditor,
+    VueEditor,
   },
   data() {
     return {
@@ -40,6 +45,14 @@ export default {
     };
   },
   methods: {
+    // 富文本编辑
+    async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await this.$http.post("upload", formData);
+      Editor.insertEmbed(cursorLocation, "image", res.data.url);
+      resetUploader();
+    },
     saveArticle() {
       // 定义分类映射关系
       const categoryMapping = {

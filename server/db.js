@@ -2,6 +2,22 @@
   const mongoose = require('mongoose')
   mongoose.connect('mongodb://localhost:27017/blog_element');
 
+
+  // 创建管理员表
+  const AdminUser = mongoose.model('AdminUser', new mongoose.Schema({
+      username: {
+          type: String,
+      },
+      password: {
+          type: String,
+          select: false,
+          // 将密码进行散列
+          set(val) {
+              return require('bcrypt').hashSync(val, 8)
+          }
+      },
+  }))
+
   // 创建文章表
   const Article = mongoose.model('Article', new mongoose.Schema({
       title: {
@@ -198,4 +214,5 @@
       Friend,
       Website,
       WordDay,
+      AdminUser
   };
