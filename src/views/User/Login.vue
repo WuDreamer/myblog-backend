@@ -1,31 +1,20 @@
 <template>
   <el-form
     class="login_container"
-    :model="login"
-    status-icon
-    :rules="rules"
-    ref="login"
+    @submit.native.prevent="login"
     label-width="70px"
   >
-    <!-- h3要放在里面:只能有一个根,且title也是表单的一部分 -->
     <h3 class="login_title">用户登录</h3>
-    <!-- prop对应rules里的键 -->
-    <el-form-item label="用户名" prop="username">
-      <el-input v-model="login.username" autocomplete="off"></el-input>
+    <el-form-item label="用户名">
+      <el-input v-model="model.username"></el-input>
     </el-form-item>
 
-    <el-form-item label="密码" prop="password">
-      <el-input
-        type="password"
-        v-model="login.password"
-        autocomplete="off"
-      ></el-input>
+    <el-form-item label="密码">
+      <el-input type="password" v-model="model.password"></el-input>
     </el-form-item>
 
-    <el-form-item>
-      <el-button type="primary" style="margin-left: 30px; margin-top: 10px"
-        >提交</el-button
-      >
+    <el-form-item class="el_button">
+      <el-button type="primary" native-type="submit">登录</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -36,20 +25,43 @@ export default {
   data() {
     return {
       // 登陆数据
-      login: {
-        username: "",
-        password: "",
-      },
-      // 校验规则
-      rules: {
-        username: [
-          { required: "true", message: "请输入用户名", trigger: "blur" },
-        ],
-        password: [
-          { required: "true", message: "请输入用户名", trigger: "blur" },
-        ],
-      },
+      model: {},
     };
+  },
+  methods: {
+    async login() {
+      try {
+        const res = await this.$http.post("login", this.model); // 确保这里的URL与你的后端API匹配
+        sessionStorage.token = res.data.token; // 下次打开网站要重新登录
+        localStorage.token = res.data.token; // 下次打开网站不需重新登录，即将信息保存
+        this.$router.push("/"); // 登录成功后跳转到首页
+        this.$message({
+          type: "success",
+          message: "欢迎管理员",
+        });
+      } catch (error) {
+        if (error.response && error.response.status === 422) {
+          // 422 状态码通常用于处理验证错误，例如用户名不存在或密码错误
+          if (error.response.data.message === "管理员不存在") {
+            this.$message({
+              type: "error",
+              message: "用户名不存在",
+            });
+          } else if (error.response.data.message === "密码错误") {
+            this.$message({
+              type: "error",
+              message: "密码错误",
+            });
+          }
+        } else {
+          // 其他错误，可能是网络错误或服务器内部错误
+          this.$message({
+            type: "error",
+            message: "登录请求失败，请稍后再试",
+          });
+        }
+      }
+    },
   },
 };
 </script>
@@ -77,5 +89,10 @@ export default {
 
 .el-input {
   width: 198px;
+}
+
+.el_button {
+  margin-left: 30px;
+  margin-top: 10px;
 }
 </style>

@@ -5,7 +5,11 @@
         <el-row :gutter="20">
           <el-col :span="18">
             <!-- 轮播图 -->
-            <el-carousel interval="4000" arrow="always" height="300px">
+            <el-carousel
+              :interval="carouselInterval"
+              arrow="always"
+              height="300px"
+            >
               <el-carousel-item v-for="item in carouselItems" :key="item">
                 <div
                   class="carousel-item"
@@ -74,6 +78,7 @@ export default {
   name: "HomePage",
   data() {
     return {
+      carouselInterval: 4000, // 定义一个数字类型的变量
       carouselItems: [
         require("@/assets/blog.png"),
         require("@/assets/blog1.png"),

@@ -16,9 +16,22 @@ Vue.prototype.$http = axios.create({
   }
 })
 
+// Vue.interceptors.request.use(function (config) {
+//   config.headers.Authorization = localStorage.token
+//   return config;
+// }, function (error) {
+//   return Promise.reject(error)
+// })
+
+
+// http.interceptors.response.use(res => {
+//   return res
+// }, err => {
+//   return Promise.reject(err)
+// })
+
 
 new Vue({
-
   router,
   render: h => h(App)
 }).$mount('#app')

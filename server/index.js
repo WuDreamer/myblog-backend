@@ -32,7 +32,10 @@ app.get('/', async (req, res) => {
 
 /*  文章管理的接口  */
 // 新增文章
-app.post('/api/articles', async (req, res) => {
+app.post('/api/articles', async (req, res, next) => {
+
+    await next() // 下一步
+}, async (req, res) => {
     req.body.time = new Date(); // 设置当前时间  
     const article = await Article.create(req.body); // 创建文章
     article.time = moment(article.time).format('YYYY年MM月DD日 HH:mm:ss'); // 格式化时间  
@@ -74,7 +77,7 @@ app.put('/api/articles/:id', async (req, res) => {
     res.send(article) //返回给前端
 })
 
-
+// 图片上传
 const multer = require('multer');
 const upload = multer({
     dest: __dirname + '/uploads'
@@ -88,31 +91,31 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
 
 /*  管理员管理的接口  */
-// 用户列表
+// 管理员列表
 app.get('/api/admin_users', async (req, res) => {
-    const admin_users = await AdminUser.find() // 查询用户数据
+    const admin_users = await AdminUser.find() // 查询管理员数据
     res.send(admin_users); //// 返回格式化后的文章列表
 })
-// 添加用户
+// 添加管理员
 app.post('/api/admin_users', async (req, res) => {
 
-    // 创建用户
+    // 创建管理员
     const admin_user = await AdminUser.create(req.body);
     res.send(admin_user);
 });
-// 删除用户
+// 删除管理员
 app.delete('/api/admin_users/:id', async (req, res) => {
     await AdminUser.findByIdAndDelete(req.params.id) // 删除数据
     res.send({
         status: true
     }) //返回true给前端
 })
-// 修改用户
+// 修改管理员
 app.put('/api/admin_users/:id', async (req, res) => {
     const admin_user = await AdminUser.findByIdAndUpdate(req.params.id, req.body) // 修改用户
     res.send(admin_user) //返回给前端
 })
-// 用户详情
+// 管理员详情
 app.get('/api/admin_users/:id', async (req, res) => {
     const admin_user = await AdminUser.findById(req.params.id) // 查看文章详细内容
     if (admin_user) {
@@ -392,6 +395,44 @@ app.put('/api/words/:id', async (req, res) => {
 
 
 
+/*  登录页面的接口  */
+
+app.set('secret', '3d23d32u42i42fwe')
+// 
+app.post('/api/login', async (req, res) => {
+    try {
+        const {
+            username,
+            password
+        } = req.body;
+        const user = await AdminUser.findOne({
+            username
+        }).select('+password');
+        if (!user) {
+            return res.status(422).send({
+                message: '管理员不存在'
+            });
+        }
+        const isValid = require('bcrypt').compareSync(password, user.password);
+        if (!isValid) {
+            return res.status(422).send({
+                message: '密码错误'
+            });
+        }
+        const jwt = require('jsonwebtoken');
+        const token = jwt.sign({
+            id: user._id
+        }, app.get('secret'));
+        res.send({
+            token
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({
+            message: '服务器内部错误'
+        });
+    }
+});
 
 
 // 设置服务器监听端口

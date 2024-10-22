@@ -33,7 +33,11 @@ Vue.use(VueRouter)
 const routes = [{
     path: '/login',
     name: 'login',
-    component: LoginPage
+    component: LoginPage,
+    //redirect: '/login', // 重定向到 '/default'
+    meta: {
+      layout: 'empty'
+    } // 标记这个路由不需要布局
   },
   // 首页
   {

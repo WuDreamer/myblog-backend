@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <el-container style="height: 100vh; border: 1px solid #eee">
+    <el-container
+      v-if="isLayoutPage"
+      style="height: 100vh; border: 1px solid #eee"
+    >
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <el-menu
           router
@@ -63,6 +66,7 @@
         </el-main>
       </el-container>
     </el-container>
+    <router-view v-if="!isLayoutPage"></router-view>
   </div>
 </template>
 
@@ -70,6 +74,11 @@
 export default {
   data() {
     return { users: [] };
+  },
+  computed: {
+    isLayoutPage() {
+      return this.$route.meta.layout !== "empty";
+    },
   },
   created() {
     this.$http.get("users").then((res) => {
